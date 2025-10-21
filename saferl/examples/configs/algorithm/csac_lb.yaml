@@ -1,0 +1,32 @@
+model:
+  _target_ : saferl.algorithms.CSAC_LB
+  _convert_: partial
+  gamma: [0.99, 0.99]
+  learning_rate : 1e-3
+  learning_starts: 100
+  batch_size: 256
+  buffer_size: 1000000
+  verbose : ${verbose}
+  cost_constraint: [25.0]
+  device: ${device}
+  log_barrier_factor: 4.0
+  log_barrier_multipier: 1.0
+  gradient_steps: 1
+  update_log_barrier_mode: const
+  update_log_barrier_args: {
+    start_ratio: 0.0,
+    end_ratio: 0.7,
+    offset_start: 5.0,
+    offset_end: -5.0
+  }
+  policy_kwargs: {
+    net_arch: [256,256],
+    n_cost_critics: 2
+  }
+  eps: 0.0000001
+  init_offset: 0.0
+  seed: ${seed}
+
+algorithm_name: csac_lb
+policy_class: SACwithCostPolicy
+noise : null

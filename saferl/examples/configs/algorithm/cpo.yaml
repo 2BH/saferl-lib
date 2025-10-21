@@ -1,0 +1,38 @@
+model:
+  _target_ : saferl.algorithms.CPO
+  _convert_: partial
+  gamma: [0.99, 0.99]
+  gae_lambda: [0.95, 0.95]
+  learning_rate : 1e-3
+  n_steps: 50 # rollout length per env
+  batch_size: 256
+  n_critic_updates: 1
+  cg_max_steps: 15
+  line_search_max_iter: 15
+  normalize_advantage: true
+  reset_on_rollout_end: true
+  verbose : ${verbose}
+  cost_constraint: [25.0] # limit for constraint return (discounted sum of costs)
+  stats_window_size: 50
+
+  # Parameters for saving rollout buffers
+  # save_rollout_buffers: true
+  # save_rollout_buffer_size: 20000
+
+  # Parameters for cost shaping
+  cost_bonus_weight: 0.0 #set to 1.0 for longer horizons (0 for linear and quadratic envs --> with 0 no cost shaping is applied)
+  failure_prediction_horizon: 5 # for predicting whether the state gets unsafe in this horizon
+  failure_prediction_updates: 25 # optimizer update steps for the failure prediction network
+
+  device: ${device}
+  policy_kwargs: {
+    net_arch: [256,256],
+    rpo_perturbance_alpha: 0, #perturbs the mean of the policy with a uniform distribution with this +- alpha 
+    ortho_init: false
+  }
+
+  seed: ${seed}
+
+algorithm_name: cpo
+policy_class: ActorCriticWithCostPolicy
+noise : null

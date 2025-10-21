@@ -1,0 +1,23 @@
+model:
+  _target_ : saferl.algorithms.SAC_LAG
+  _convert_: partial
+  buffer_size: 1000000
+  gamma: [0.99, 0.99]
+  learning_rate : 1e-3
+  learning_starts: 100 #50000
+  batch_size: 256
+  verbose : ${verbose}
+  gradient_steps: 1
+  cost_constraint: [25.0]
+  device: ${device}
+  seed: ${seed}
+  policy_kwargs: {
+    net_arch: [256, 256],
+  }
+  
+  ent_coef: "auto"
+  target_entropy: 'auto'
+
+algorithm_name: sac_lag
+policy_class: SACwithCostPolicy
+noise: null

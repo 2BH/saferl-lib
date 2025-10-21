@@ -1,0 +1,25 @@
+model:
+  _target_ : saferl.algorithms.SAC
+  _convert_: partial
+  gamma: 0.99
+  learning_rate : 1e-3
+  learning_starts: 100
+  batch_size: 256
+  verbose : ${verbose}
+  cost_constraint: [25.0]
+  device: ${device}
+  gradient_steps: 1
+  cost_weight_factor: 6.0
+  policy_kwargs: {
+    net_arch: [256,256]
+  }
+  seed: ${seed}
+
+  ent_coef: "auto"
+  target_entropy: 'auto'
+  use_sde: false
+  buffer_size: 1000000
+
+algorithm_name: sac
+policy_class: SACwithCostPolicy
+noise : null

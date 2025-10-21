@@ -1,0 +1,197 @@
+# SafeRL-Lib
+
+A comprehensive toolkit for Constrained Reinforcement Learning and Safe Reinforcement Learning research, built on top of Stable-Baselines3 and Safety-Gymnasium.
+
+## Features
+
+- **Multiple Safe RL Algorithms**: Implementation of state-of-the-art safe RL algorithms including:
+  - **CSAC-LB** (Constrained Soft Actor-Critic with Log Barrier) - [TMLR 2025](https://openreview.net/forum?id=Amh95oURaE) ⭐
+  - SAC-Lag (Soft Actor-Critic with Lagrangian constraints)
+  - TRPO-Lag (Trust Region Policy Optimization with Lagrangian constraints)
+  - CPO (Constrained Policy Optimization)
+  - WCSAC (Worst-Case Soft Actor-Critic)
+  - APPO (Augmented Proximal Policy Optimization)
+
+
+## Installation
+
+### Prerequisites
+- Python 3.8+
+- CUDA-compatible GPU (recommended)
+- Conda package manager
+
+### Step 1: Clone the Repository
+```bash
+git clone git@github.com:2BH/saferl-lib.git
+cd saferl-lib
+```
+
+### Step 2: Create Conda Environment
+```bash
+conda env create -f environment.yml
+conda activate saferl-lib
+```
+
+### Step 3: Install Safety-Gymnasium
+```bash
+cd ~/
+wget https://github.com/PKU-Alignment/safety-gymnasium/archive/refs/heads/main.zip
+unzip main.zip
+cd safety-gymnasium-main
+pip install -e .
+```
+
+### Step 4: Install SafeRL-Lib
+```bash
+cd /path/to/saferl-lib
+pip install -e .
+```
+
+## 🌟 Featured Algorithm: CSAC-LB
+
+**Constrained Soft Actor-Critic with Log Barrier** - [TMLR 2025](https://openreview.net/forum?id=Amh95oURaE)
+
+CSAC-LB is our flagship algorithm that addresses key challenges in constrained reinforcement learning:
+
+- **Numerical Stability**: Uses a linear smoothed log barrier function that provides non-vanishing gradients
+- **Quick Recovery**: Enables agents to quickly recover from unsafe states during training
+- **Enhanced Safety**: Employs a pessimistic double-critic architecture to mitigate constraint violation underestimation
+- **No Pre-training Required**: Model-free, sample-efficient, off-policy algorithm ready for immediate use
+
+**Key Innovation**: The integration of a smoothed log barrier function into the actor's objective provides a numerically stable alternative to traditional interior-point methods, making it particularly suitable for safety-critical applications.
+
+```python
+# Quick CSAC-LB example
+from saferl import CSAC_LB, create_env
+
+env = create_env(env_cfg, seed=42)
+model = CSAC_LB("MlpPolicy", env, cost_constraint=[5.0], lower_bound=0.1)
+model.learn(total_timesteps=100000)
+```
+
+## Quick Start
+
+### Basic Usage
+```bash
+# Activate environment
+conda activate saferl
+
+# Run CSAC-LB experiment (recommended)
+python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_csac_lb
+
+# Run with custom hyperparameters
+python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_csac_lb algorithm.model.cost_constraint=[10.0] seed=42
+
+# Run SAC-Lag experiment
+python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_sac_lag
+```
+
+### Available Algorithms
+- **`csac_lb`**: [Constrained Soft Actor-Critic with Log Barrier](https://openreview.net/forum?id=Amh95oURaE) - TMLR 2025 ⭐
+  - Model-free, sample-efficient, off-policy algorithm
+  - Uses linear smoothed log barrier function for numerical stability
+  - Pessimistic double-critic architecture for enhanced safety
+- `sac_lag`: Soft Actor-Critic with Lagrangian constraints
+- `trpo_lag`: Trust Region Policy Optimization with Lagrangian constraints
+- `cpo`: Constrained Policy Optimization
+- `wcsac`: Worst-Case Soft Actor-Critic
+- `appo`: Augmented Proximal Policy Optimization
+
+## Configuration System
+
+The library uses Hydra for configuration management. Configurations are organized as follows:
+
+```
+saferl/examples/configs/
+├── algorithm/          # Algorithm-specific configurations
+├── env/               # Environment-specific configurations
+├── callback/          # Callback configurations
+└── main.yaml         # Main configuration file
+```
+
+### Customizing Experiments
+
+You can override any configuration parameter:
+
+```bash
+# Change learning rate
+python -m saferl.examples.main algorithm=sac_lag algorithm.model.learning_rate=1e-4
+
+# Change environment parameters
+python -m saferl.examples.main env=SafetyAntVelocity env.train_env.env_kwargs.camera_id=1
+
+# Run with different seeds
+python -m saferl.examples.main seed=42
+```
+
+## Examples
+
+### Training with CSAC-LB (Recommended)
+```python
+from saferl import CSAC_LB, create_env
+
+# Create environment
+env = create_env(env_cfg, seed=42)
+
+# Create and train CSAC-LB model
+model = CSAC_LB("MlpPolicy", env, cost_constraint=[5.0], lower_bound=0.1)
+model.learn(total_timesteps=100000)
+
+# Save model
+model.save("csac_lb_agent")
+```
+
+### Training with SAC-Lag
+```python
+from saferl import SAC_LAG, create_env
+
+# Create environment
+env = create_env(env_cfg, seed=42)
+
+# Create and train SAC-Lag model
+model = SAC_LAG("MlpPolicy", env, cost_constraint=[5.0])
+model.learn(total_timesteps=100000)
+
+# Save model
+model.save("sac_lag_agent")
+```
+
+### Evaluation
+```python
+from saferl.common.utils import evaluate
+
+# Evaluate the trained model
+results = evaluate(model, env, num_episodes=10)
+print(f"Average return: {results['ret']}")
+print(f"Average cost: {results['cost']}")
+print(f"Safety rate: {results['is_safe']}")
+```
+
+## Documentation
+
+For detailed API documentation and examples, please refer to the individual algorithm modules and the `saferl.common` utilities.
+
+## Citation
+
+If you use this library in your research or use our algorithm, please cite our work:
+
+### CSAC-LB Algorithm (TMLR 2025)
+```bibtex
+@article{csac_lb2025,
+  title={Constrained Reinforcement Learning with Smoothed Log Barrier Function},
+  author={Your Name and Co-authors},
+  journal={Transactions on Machine Learning Research},
+  year={2025},
+  url={https://openreview.net/forum?id=Amh95oURaE}
+}
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Built on top of [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)
+- Environment support from [Safety-Gymnasium](https://github.com/PKU-Alignment/safety-gymnasium)
+- Configuration management with [Hydra](https://github.com/facebookresearch/hydra)

@@ -1,0 +1,12 @@
+total_timesteps: 3000000
+episode_len: 1000
+train_env:
+  env_name: SafetyWalker2dVelocity-v1
+  env_kwargs: {camera_id: 0}
+  num_env: ${num_env}
+
+  
+eval_env:
+  env_name: SafetyWalker2dVelocity-v1
+  env_kwargs: {render_mode: rgb_array,
+               camera_id: 0}

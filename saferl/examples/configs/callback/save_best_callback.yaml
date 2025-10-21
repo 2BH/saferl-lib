@@ -1,0 +1,9 @@
+on_step_callback:
+  _target_: saferl.common.callbacks.SaveOnBestTrainingRewardCallback
+  eval_freq: ${eval_freq}
+  save_freq: ${save_freq}
+  save_video: ${save_video}
+  save_video_freq: ${save_video_freq}
+  num_eval_episodes: ${num_eval_episodes}
+  log_dir: ???
+  verbose: ${verbose}

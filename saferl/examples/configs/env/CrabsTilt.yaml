@@ -1,0 +1,11 @@
+total_timesteps: 100000
+episode_len: 200
+train_env:
+  env_name: SafePendulumTilt-v0
+  env_kwargs: {}
+  num_env: ${num_env}
+
+  
+eval_env:
+  env_name: SafePendulumTilt-v0
+  env_kwargs: {render_mode: rgb_array}

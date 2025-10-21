@@ -1,0 +1,11 @@
+total_timesteps: 3000000
+episode_len: 500
+train_env:
+  env_name: SafetyCarCircle1-v0
+  env_kwargs: {camera_id: 1}
+  num_env: ${num_env}
+
+  
+eval_env:
+  env_name: SafetyCarCircle1-v0
+  env_kwargs: {render_mode: rgb_array, camera_id: 1}

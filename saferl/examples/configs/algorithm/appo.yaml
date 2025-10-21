@@ -1,0 +1,25 @@
+model:
+  _target_ : saferl.algorithms.APPO
+  _convert_: partial
+  gamma: [0.99, 0.99]
+  gae_lambda: [0.95, 0.95]
+  learning_rate : 0.001
+  n_steps: 1000 # rollout length per env
+  batch_size: 256
+  n_critic_updates: 50
+  n_policy_updates: 50
+  target_kl: 0.02
+  normalize_advantage: true
+  reset_on_rollout_end: true
+  verbose : ${verbose}
+  cost_constraint: [25.0] # limit for constraint return (discounted sum of costs)
+
+  device: ${device}
+  policy_kwargs: {
+    net_arch: [256,256],
+  }
+  seed: ${seed}
+
+algorithm_name: appo
+policy_class: ActorCriticWithCostPolicy
+noise : null

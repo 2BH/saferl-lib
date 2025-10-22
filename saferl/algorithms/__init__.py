@@ -21,19 +21,11 @@ Example:
 """
 
 from saferl.algorithms.csac_lb import CSAC_LB
-from saferl.algorithms.ppo_lag.ppo_lag import PPO_LAG
 from saferl.algorithms.wcsac import WCSAC
 from saferl.algorithms.cpo import CPO
 from saferl.algorithms.sac_lag import SAC_LAG   
 from saferl.algorithms.sac import SAC
 from saferl.algorithms.appo import APPO
-
-# Try to import TRPO_LAG if it exists
-try:
-    from saferl.algorithms.trpo_lag import TRPO_LAG
-    _has_trpo_lag = True
-except ImportError:
-    _has_trpo_lag = False
 
 __all__ = [
     "WCSAC",
@@ -41,11 +33,5 @@ __all__ = [
     "SAC_LAG",
     "SAC",
     "CSAC_LB",
-    "PPO_LAG",
     "APPO",
 ]
-
-# Add TRPO_LAG to __all__ if available
-if _has_trpo_lag:
-    __all__.append("TRPO_LAG")
-

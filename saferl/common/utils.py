@@ -18,7 +18,6 @@ import gymnasium as gym
 from gymnasium.wrappers.rescale_action import RescaleAction
 from gymnasium.wrappers.flatten_observation import FlattenObservation
 import safety_gymnasium
-from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 import matplotlib.pyplot as plt
 
 def evaluate(

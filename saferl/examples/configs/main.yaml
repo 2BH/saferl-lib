@@ -1,20 +1,16 @@
-# Main configuration file for SafeRL-Lib
-# This file provides default settings and can be overridden by experiment configs
-
+_partial_: true
 defaults:
-  - experiments/SafetyAntVelocity_csac_lb  # Default experiment configuration (CSAC-LB)
-  - _self_
+  - algorithm: csac_lb
+  - env: SafetyCarCircle1
+  - callback@callback: save_best_callback
 
-# =============================================================================
-# GLOBAL SETTINGS (can be overridden)
-# =============================================================================
 seed: 0
 device: "cuda"
-verbose: 1
+verbose : 1
 save_freq: 100000
 eval_freq: 1000
-save_video_freq: 100000 
-save_video: true
+save_video_freq: 100000
+save_video: True
 num_eval_episodes: 1
 norm_obs: false
 norm_act: true
@@ -23,15 +19,12 @@ norm_cost: false
 num_env: 10
 use_multi_process: false
 
-# =============================================================================
-# HYDRA CONFIGURATION
-# =============================================================================
 hydra:
   mode: RUN
   job:
-    chdir: true
+    chdir: true # defined for consistency across versions
   run:
-    dir: ./exp/local/${now:%Y.%m.%d}/Benchmark/${env.train_env.env_name}/${algorithm.algorithm_name}/${seed}_${now:%H%M%S}/Seed${seed}_Cost${algorithm.model.cost_constraint}
+    dir: ./exp/local/${now:%Y.%m.%d}/Benchmark/${env.train_env.env_name}/${algorithm.algorithm_name}/${seed}_${now:%H%M%S}/Seed${seed}_Cost${algorithm.model.cost_constraint} #_Pene${env.infeasible_region_penetratable}_${seed}_${now:%H%M%S}
   sweep:
     dir: ./exp/local/${now:%Y.%m.%d}/Benchmark/${env.train_env.env_name}/${algorithm.algorithm_name}/${seed}_${now:%H%M%S}
     subdir: ${hydra.job.num}_Seed${seed}_Cost${algorithm.model.cost_constraint}

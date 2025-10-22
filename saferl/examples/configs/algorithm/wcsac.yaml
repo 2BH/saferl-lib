@@ -1,0 +1,34 @@
+model:
+  _target_ : saferl.algorithms.WCSAC
+  _convert_: partial
+  gamma: [0.99, 0.99]
+  learning_rate : 1e-3
+  learning_starts: 100 #0
+  batch_size: 256
+  buffer_size: 1000000
+  verbose : ${verbose}
+  cost_constraint: [25.0]
+  device: ${device}
+  gradient_steps: 1
+  risk_level: 0.5
+  damp_scale: 10
+  policy_kwargs: {
+    net_arch: [256, 256],
+    n_cost_critics: 2,
+  }
+  seed: ${seed}
+
+  ent_coef: "auto"
+  target_entropy: 'auto'
+  # replay_buffer_kwargs:
+  #   track_transition_type_stats: false
+
+  # # how many episodes to collect per iteration  
+  # train_freq: [1, 'episode'] # with 25 this results in timesteps 25*40 = 1000 timesteps for 40 timesteps per episode
+
+algorithm_name: wcsac
+policy_class: SACwithCostPolicy
+# noise:
+#   noise_type: NormalActionNoise
+#   sigma: 0.2
+noise : null

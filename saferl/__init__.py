@@ -24,11 +24,10 @@ Example:
 
 __version__ = "0.1.0"
 __author__ = "SafeRL-Lib Team"
-__email__ = "saferl@example.com"
+__email__ = "zhangb@cs.uni-freiburg.de"
 
 # Import main algorithm classes for easy access
 from saferl.algorithms.sac_lag import SAC_LAG
-from saferl.algorithms.trpo_lag import TRPO_LAG
 from saferl.algorithms.cpo import CPO
 from saferl.algorithms.csac_lb import CSAC_LB
 from saferl.algorithms.wcsac import WCSAC
@@ -41,7 +40,6 @@ from saferl.common.utils import create_env, evaluate, evaluate_after_training
 __all__ = [
     # Algorithm classes
     "SAC_LAG",
-    "TRPO_LAG", 
     "CPO",
     "CSAC_LB",
     "WCSAC",

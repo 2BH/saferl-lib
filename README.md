@@ -1,24 +1,24 @@
 # SafeRL-Lib
 
-A comprehensive toolkit for Constrained Reinforcement Learning and Safe Reinforcement Learning research, built on top of Stable-Baselines3 and Safety-Gymnasium.
+A comprehensive toolkit for Constrained Reinforcement Learning and Safe Reinforcement Learning research, built on top of [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3) and [Safety-Gymnasium](https://github.com/PKU-Alignment/safety-gymnasium).
 
 ## Features
 
 - **Multiple Safe RL Algorithms**: Implementation of state-of-the-art safe RL algorithms including:
   - **CSAC-LB** (Constrained Soft Actor-Critic with Log Barrier) - [TMLR 2025](https://openreview.net/forum?id=Amh95oURaE) ⭐
-  - SAC-Lag (Soft Actor-Critic with Lagrangian constraints)
-  - TRPO-Lag (Trust Region Policy Optimization with Lagrangian constraints)
-  - CPO (Constrained Policy Optimization)
-  - WCSAC (Worst-Case Soft Actor-Critic)
-  - APPO (Augmented Proximal Policy Optimization)
+  - SAC-Lag (Soft Actor-Critic with Lagrangian constraints) - [RSS 2020](https://arxiv.org/abs/2002.08550)
+  - CPO (Constrained Policy Optimization) - [ICML 2017](https://arxiv.org/abs/1705.10528)
+  - WCSAC (Worst-Case Soft Actor-Critic) - [AAAI 2021](https://ojs.aaai.org/index.php/AAAI/article/view/17272)
+  - APPO (Augmented Proximal Policy Optimization) - [AAAI 2023](https://ojs.aaai.org/index.php/AAAI/article/view/25888)
+  - SAC (Soft Actor-Critic) with Reward Shaping - Modified from [ICML 2018](https://arxiv.org/abs/1801.01290)
 
 
 ## Installation
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.10
 - CUDA-compatible GPU (recommended)
-- Conda package manager
+
 
 ### Step 1: Clone the Repository
 ```bash
@@ -26,39 +26,41 @@ git clone git@github.com:2BH/saferl-lib.git
 cd saferl-lib
 ```
 
-### Step 2: Create Conda Environment
+### Step 2: Create Conda Environment (Optional)
 ```bash
-conda env create -f environment.yml
+conda env create -n saferl python=3.10
 conda activate saferl-lib
 ```
 
-### Step 3: Install Safety-Gymnasium
+### Step 3: Install Safety-Gymnasium and other dependencies
 ```bash
+pip install stable_baselines3==2.7.0
+pip install sb3_contrib==2.7.0
 cd ~/
 wget https://github.com/PKU-Alignment/safety-gymnasium/archive/refs/heads/main.zip
 unzip main.zip
 cd safety-gymnasium-main
 pip install -e .
-```
-
-### Step 4: Install SafeRL-Lib
-```bash
-cd /path/to/saferl-lib
-pip install -e .
+pip install gymnasium==0.29.1
+pip install hydra-core==1.3.2
+pip install tensorboard==2.20.0
 ```
 
 ## 🌟 Featured Algorithm: CSAC-LB
 
 **Constrained Soft Actor-Critic with Log Barrier** - [TMLR 2025](https://openreview.net/forum?id=Amh95oURaE)
 
-CSAC-LB is our flagship algorithm that addresses key challenges in constrained reinforcement learning:
+CSAC-LB is our algorithm that addresses key challenges in constrained reinforcement learning:
 
 - **Numerical Stability**: Uses a linear smoothed log barrier function that provides non-vanishing gradients
 - **Quick Recovery**: Enables agents to quickly recover from unsafe states during training
 - **Enhanced Safety**: Employs a pessimistic double-critic architecture to mitigate constraint violation underestimation
-- **No Pre-training Required**: Model-free, sample-efficient, off-policy algorithm ready for immediate use
+
+
 
 **Key Innovation**: The integration of a smoothed log barrier function into the actor's objective provides a numerically stable alternative to traditional interior-point methods, making it particularly suitable for safety-critical applications.
+
+![image](assets/smoothed_log_barrier.png)
 
 ```python
 # Quick CSAC-LB example
@@ -77,25 +79,17 @@ model.learn(total_timesteps=100000)
 conda activate saferl
 
 # Run CSAC-LB experiment (recommended)
-python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_csac_lb
-
-# Run with custom hyperparameters
-python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_csac_lb algorithm.model.cost_constraint=[10.0] seed=42
-
-# Run SAC-Lag experiment
-python -m saferl.examples.run_experiment experiment=SafetyAntVelocity_sac_lag
+python -m saferl.examples.main algorithm=csac_lb
 ```
 
-### Available Algorithms
-- **`csac_lb`**: [Constrained Soft Actor-Critic with Log Barrier](https://openreview.net/forum?id=Amh95oURaE) - TMLR 2025 ⭐
-  - Model-free, sample-efficient, off-policy algorithm
-  - Uses linear smoothed log barrier function for numerical stability
-  - Pessimistic double-critic architecture for enhanced safety
-- `sac_lag`: Soft Actor-Critic with Lagrangian constraints
-- `trpo_lag`: Trust Region Policy Optimization with Lagrangian constraints
-- `cpo`: Constrained Policy Optimization
-- `wcsac`: Worst-Case Soft Actor-Critic
-- `appo`: Augmented Proximal Policy Optimization
+### Reproducing the Results
+```bash
+conda activate saferl
+# For Crabs environments, env=CrabsMove/CrabsSwing/CrabsTilt/CrabsUpright
+python -m saferl.examples.main env=CrabsMove norm_obs=False eval_freq=1000
+# For other environments, i.e. env=SafetyAntVelocity/SafetyHumanoidVelocity/SafetyWalker2DVelocity/SafetyHalfCheetahVelocity/SafetyHopperVelocity/SafetyCarircle1
+python -m saferl.examples.main env=SafetyAntVelocity norm_obs=True eval_freq=100000
+```
 
 ## Configuration System
 
@@ -175,17 +169,6 @@ For detailed API documentation and examples, please refer to the individual algo
 
 If you use this library in your research or use our algorithm, please cite our work:
 
-### CSAC-LB Algorithm (TMLR 2025)
-```bibtex
-@article{csac_lb2025,
-  title={Constrained Reinforcement Learning with Smoothed Log Barrier Function},
-  author={Your Name and Co-authors},
-  journal={Transactions on Machine Learning Research},
-  year={2025},
-  url={https://openreview.net/forum?id=Amh95oURaE}
-}
-```
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -195,3 +178,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Built on top of [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)
 - Environment support from [Safety-Gymnasium](https://github.com/PKU-Alignment/safety-gymnasium)
 - Configuration management with [Hydra](https://github.com/facebookresearch/hydra)
+
+![image](assets/UFR-vorlage-designsystem-typo-farben-V1.92-1536x1086.png)
